@@ -14,10 +14,14 @@ class CouncilAdaptor:
 
     def format_date(self, date):
 
-        # Assuming the input date is a string in the format "Monday, 24 March 2025"
-        date_obj = datetime.strptime(date, "%A, %d %B %Y")
-        date = date_obj.strftime("%d/%m/%Y")
-        return date
+        # Assuming the input date is a string in the format Monday, 17 March 2025
+        try:
+            date_obj = datetime.strptime(date, "%A, %d %B %Y")
+            date = date_obj.strftime("%d/%m/%Y")
+            return date
+        except ValueError:
+            # Handle the error or return a default value
+            return None
 
     def clean_string(self, string):
         return string.strip().replace("\n", " ").replace("\r", " ").replace("\t", " ").replace("(", "").replace(")", "")

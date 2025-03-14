@@ -16,4 +16,6 @@ RUN playwright install && playwright install-deps
 
 COPY bin-canary /app
 
+ENV INTERVAL=24
+
 CMD python app.py
