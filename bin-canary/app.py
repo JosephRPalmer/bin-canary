@@ -65,7 +65,7 @@ def tomorrow_or_not(bin_dates):
         logging.debug(bin_date)
         bin_date_obj = datetime.datetime.strptime(bin_date, "%d/%m/%Y").date()
         days_difference = (bin_date_obj - datetime.datetime.now().date()).days
-        if days_difference < 5 and days_difference >= 1:
+        if days_difference < 2 and days_difference >= 1:
             tomorrow_arr.append(type)
         else:
             logging.info(f"Bin type: {type}, Collection date: {bin_date}, Days until collection: {days_difference}")
