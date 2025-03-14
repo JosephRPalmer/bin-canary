@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 __author__ = "Joseph Ryan-Palmer"
-__version__ = "0.4"
+__version__ = "0.5"
 
 import requests
 import argparse
@@ -116,7 +116,7 @@ def lmk(council, address, postcode, interval, discord, ntfy, delay):
                 send_ntfy_message(ntfy, message, "Bins due to be collected tomorrow", 1, "wastebasket")
                 logging.info("NTFY Notification sent")
 
-        if interval:
+        if interval and int(interval) != 24:
             sleep_duration = int(interval) * 3600
             logging.info(f"Sleeping for {interval} hours")
         else:
