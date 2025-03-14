@@ -1,11 +1,11 @@
-#Bin Canary
+# Bin Canary
 
 Dockerised python script that can notify NTFY and Discord channels when a bin is due to be collected in the next 24 hours
 
-##Working Councils
+## Working Councils
 - South Ribble
 
-#How to Use
+# How to Use
 - Make use of the docker compose example below or the example in the repo
 - Set the following env vars
     - COUNCIL=South-Ribble
