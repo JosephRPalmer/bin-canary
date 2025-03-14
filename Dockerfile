@@ -12,7 +12,7 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-RUN playwright install && playwright install-deps
+RUN playwright install chromium && playwright install-deps
 
 COPY bin-canary /app
 
