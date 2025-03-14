@@ -51,7 +51,7 @@ def parser_function():
     parser.add_argument("--ntfy-hook", help="NTFY webhook",
                     type=str, default=os.environ.get('NTFY'))
     parser.add_argument("--delay", help="Delay notification until 7 PM",
-                    action='store_true', default=os.environ.get('DELAY', True))
+                    type=str, default=os.environ.get('DELAY', True))
     parser.add_argument(
     "--version",
     action="version",
