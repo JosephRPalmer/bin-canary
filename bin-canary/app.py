@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 __author__ = "Joseph Ryan-Palmer"
-__version__ = "0.3"
+__version__ = "0.4"
 
 import requests
 import argparse
@@ -51,7 +51,7 @@ def parser_function():
     parser.add_argument("--ntfy-hook", help="NTFY webhook",
                     type=str, default=os.environ.get('NTFY'))
     parser.add_argument("--delay", help="Delay notification until 7 PM",
-                    type=str, default=os.environ.get('DELAY', True))
+                    type=str, default=os.environ.get('DELAY', "True"))
     parser.add_argument(
     "--version",
     action="version",
