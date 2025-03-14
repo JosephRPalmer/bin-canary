@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 __author__ = "Joseph Ryan-Palmer"
-__version__ = "0.1"
+__version__ = "0.2"
 
 import requests
 import argparse
@@ -117,7 +117,17 @@ def lmk(council, address, postcode, interval, discord, ntfy, delay):
                 send_ntfy_message(ntfy, message, "Bins due to be collected tomorrow", 1, "wastebasket")
                 logging.info("NTFY Notification sent")
         logging.info("Sleeping for {} hours".format(interval))
-        sleep(int(interval)*3600)
+        if interval:
+            sleep_duration = int(interval) * 3600
+            logging.info(f"Sleeping for {interval} hours")
+        else:
+            now = datetime.datetime.now()
+            next_check = now.replace(hour=18, minute=0, second=0, microsecond=0)
+            if now > next_check:
+                next_check += datetime.timedelta(days=1)
+                sleep_duration = (next_check - now).total_seconds()
+                logging.info(f"Sleeping until next check at 6 PM, which is in {sleep_duration} seconds")
+        sleep(sleep_duration)
 
 def main():
     logging.info("Bin Canary v{}".format(__version__))
