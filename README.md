@@ -2,7 +2,7 @@
 
 Dockerised python script that can notify NTFY and Discord channels when a bin is due to be collected in the next 24 hours
 
-## Working Councils
+## Supported Council Websites
 - South Ribble
 
 # How to Use
