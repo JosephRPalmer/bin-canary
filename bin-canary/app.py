@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 __author__ = "Joseph Ryan-Palmer"
-__version__ = "0.2"
+__version__ = "0.3"
 
 import requests
 import argparse
@@ -68,7 +68,7 @@ def tomorrow_or_not(bin_dates):
         if days_difference < 2 and days_difference >= 1:
             tomorrow_arr.append(type)
         else:
-            logging.info(f"Bin type: {type}, Collection date: {bin_date}, Days until collection: {days_difference}")
+            logging.debug(f"Bin type: {type}, Collection date: {bin_date}, Days until collection: {days_difference}")
     return tomorrow_arr
 
 def check_for_valid_dates(bin_dates):
@@ -88,7 +88,6 @@ def lmk(council, address, postcode, interval, discord, ntfy, delay):
             logging.error("Invalid dates found, retrying...")
             bin_dates = council.extract_bin_dates(address, postcode_spacer(postcode))
         bin_type_arr = tomorrow_or_not(bin_dates)
-        logging.info(bin_type_arr)
         if len(bin_type_arr) > 0:
             message = ""
             if len(bin_type_arr) > 1:
@@ -116,7 +115,7 @@ def lmk(council, address, postcode, interval, discord, ntfy, delay):
             if ntfy:
                 send_ntfy_message(ntfy, message, "Bins due to be collected tomorrow", 1, "wastebasket")
                 logging.info("NTFY Notification sent")
-        logging.info("Sleeping for {} hours".format(interval))
+
         if interval:
             sleep_duration = int(interval) * 3600
             logging.info(f"Sleeping for {interval} hours")
