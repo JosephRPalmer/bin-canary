@@ -11,7 +11,7 @@ Dockerised python script that can notify NTFY and Discord channels when a bin is
     - COUNCIL=South-Ribble
     - ADDRESS=1
     - POSTCODE=AA123ZZ
-    - NTFY-https://<ntfy webhook> (optional)
+    - NTFY=https://<ntfy webhook> (optional)
     - DISCORD=<discord webhook> (optional)
     - INTERVAL=24 (optional) - This is the checking interval, the notifier only fires if the bin is collected tomorrow.
     - DELAY=False (optional) Delay notification to 7pm. (default: true)

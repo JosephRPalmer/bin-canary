@@ -97,7 +97,6 @@ def lmk(council, address, postcode, interval, discord, ntfy, delay, second_notif
             elif len(bin_type_arr) == 1:
                 message = "Bin will be collected tomorrow - {}.".format(bin_type_arr[0])
             logging.info("Bin due tomorrow - {}".format(bin_type_arr))
-            logging.info("Sending notification")
             if second_notification:
                 logging.info("Sending second notification")
                 current_time = datetime.datetime.now()
@@ -114,6 +113,7 @@ def lmk(council, address, postcode, interval, discord, ntfy, delay, second_notif
                     logging.info("Discord Notification sent")
                 if ntfy:
                     send_ntfy_message(ntfy, message, "Bins due to be collected tomorrow", 1, "wastebasket")
+            logging.info("Sending notification")
             if delay:
                 current_time = datetime.datetime.now()
                 target_time = current_time.replace(hour=19, minute=0, second=0, microsecond=0)
