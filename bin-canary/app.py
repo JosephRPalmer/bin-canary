@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 __author__ = "Joseph Ryan-Palmer"
-__version__ = "0.5"
+__version__ = "0.6"
 
 import requests
 import argparse
@@ -52,6 +52,8 @@ def parser_function():
                     type=str, default=os.environ.get('NTFY'))
     parser.add_argument("--delay", help="Delay notification until 7 PM",
                     type=str, default=os.environ.get('DELAY', "True"))
+    parser.add_argument("--second-notification", help="Send second notification at 1PM the day before",
+                    type=str, default=os.environ.get('SECOND_NOTIFICATION', "True"))
     parser.add_argument(
     "--version",
     action="version",
@@ -80,7 +82,7 @@ def check_for_valid_dates(bin_dates):
             return False
     return True
 
-def lmk(council, address, postcode, interval, discord, ntfy, delay):
+def lmk(council, address, postcode, interval, discord, ntfy, delay, second_notification):
     while True:
         logging.info("Checking if bin due in next {} hours".format(interval))
         bin_dates = council.extract_bin_dates(address, postcode_spacer(postcode))
@@ -96,6 +98,22 @@ def lmk(council, address, postcode, interval, discord, ntfy, delay):
                 message = "Bin will be collected tomorrow - {}.".format(bin_type_arr[0])
             logging.info("Bin due tomorrow - {}".format(bin_type_arr))
             logging.info("Sending notification")
+            if second_notification:
+                logging.info("Sending second notification")
+                current_time = datetime.datetime.now()
+                target_time = current_time.replace(hour=13, minute=0, second=0, microsecond=0)
+                if current_time > target_time:
+                    logging.info("Current time is after 1 PM, sending notification immediately.")
+                else:
+                    sleep_duration = (target_time - current_time).total_seconds()
+                    logging.info(f"Sleeping until 1 PM, which is in {sleep_duration} seconds")
+                    sleep(sleep_duration)
+                if discord:
+                    webhook = Webhook.from_url(discord, adapter=RequestsWebhookAdapter())
+                    webhook.send(message)
+                    logging.info("Discord Notification sent")
+                if ntfy:
+                    send_ntfy_message(ntfy, message, "Bins due to be collected tomorrow", 1, "wastebasket")
             if delay:
                 current_time = datetime.datetime.now()
                 target_time = current_time.replace(hour=19, minute=0, second=0, microsecond=0)
@@ -121,11 +139,11 @@ def lmk(council, address, postcode, interval, discord, ntfy, delay):
             logging.info(f"Sleeping for {interval} hours")
         else:
             now = datetime.datetime.now()
-            next_check = now.replace(hour=18, minute=0, second=0, microsecond=0)
+            next_check = now.replace(hour=12, minute=0, second=0, microsecond=0)
             if now > next_check:
                 next_check += datetime.timedelta(days=1)
                 sleep_duration = (next_check - now).total_seconds()
-                logging.info(f"Sleeping until next check at 6 PM, which is in {sleep_duration} seconds")
+                logging.info(f"Sleeping until next check at 12 PM, which is in {sleep_duration} seconds")
         sleep(sleep_duration)
 
 def main():
@@ -134,8 +152,11 @@ def main():
     council = mhclg.mhclg().council_finder(arg.council)
     logging.info("Extracting initial bin dates")
     bin_dates = council.extract_bin_dates(arg.address, postcode_spacer(arg.postcode))
+    if bin_dates == None:
+        logging.error("Error contacting council website. Please check your address and postcode and retry.")
+        exit(1)
     logging.info(bin_dates)
-    lmk(council, arg.address, arg.postcode, arg.interval, arg.discord_hook if arg.discord_hook else None, arg.ntfy_hook if arg.ntfy_hook else None, False if arg.delay.lower() == "false" else True)
+    lmk(council, arg.address, arg.postcode, arg.interval, arg.discord_hook if arg.discord_hook else None, arg.ntfy_hook if arg.ntfy_hook else None, False if arg.delay.lower() == "false" else True, False if arg.second_notification.lower() == "false" else True)
 
 if __name__ == "__main__":
     main()
